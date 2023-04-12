@@ -30,8 +30,10 @@ public class RegistrationService {
                 throw new IllegalStateException("Email not valid!");
             }
 
-            //token = userService. TODO: After write the signUp method, we will write in this here.
+            //token = userService.signUpUser() //TODO: After write the signUp method, we will write in this here.
 
+            String link = "" + token;
+            emailSender.send(request.getEmail(),buildEmail(request.getName(),link));
 
         }catch (Exception e){
             LOGGER.error("register method error: " + e);
@@ -53,7 +55,7 @@ public class RegistrationService {
         }
 
         confirmationTokenService.setConfirmedAt(token);
-        //appUserService.enableAppUser(confirmationToken.getAppUser().getEmail()); TODO: After write the signUp method, we will write in this here.
+        userService.enableUser(confirmationToken.getUser().getEmail());
         return "confirmed";
     }
 
