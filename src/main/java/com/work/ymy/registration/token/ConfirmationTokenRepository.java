@@ -1,6 +1,6 @@
 package com.work.ymy.registration.token;
 
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -14,7 +14,7 @@ public interface ConfirmationTokenRepository extends JpaRepository<ConfirmationT
 
     @Modifying
     @Transactional
-    @Query("UPDATE ConfirmationToken c SET C.confirmedAt = ?2 WHERE c.token = ?1")
+    @Query("UPDATE ConfirmationToken c SET c.confirmedAt = ?2 WHERE c.token = ?1")
     int updateConfirmedAt(String token, LocalDateTime confirmedAt);
 
 }

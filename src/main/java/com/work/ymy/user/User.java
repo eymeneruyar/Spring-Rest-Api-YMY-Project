@@ -4,13 +4,16 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
 
 import java.util.HashSet;
 import java.util.Set;
 
 @Data
-@Entity
+@Entity()
+@NoArgsConstructor
+@Table(name = "Users")
 public class User {
 
     @Id
@@ -57,5 +60,15 @@ public class User {
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(	name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
+
+    public User(String name,String surname,String username,String email,String companyName,String password,Set<Role> roles){
+        this.name = name;
+        this.surname = surname;
+        this.username = username;
+        this.email = email;
+        this.companyName = companyName;
+        this.password = password;
+        this.roles = roles;
+    }
 
 }

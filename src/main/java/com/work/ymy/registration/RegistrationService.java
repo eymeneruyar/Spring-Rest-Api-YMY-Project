@@ -3,6 +3,7 @@ package com.work.ymy.registration;
 import com.work.ymy.email.EmailSender;
 import com.work.ymy.registration.token.ConfirmationToken;
 import com.work.ymy.registration.token.ConfirmationTokenService;
+import com.work.ymy.user.User;
 import com.work.ymy.user.UserService;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
@@ -30,9 +31,19 @@ public class RegistrationService {
                 throw new IllegalStateException("Email not valid!");
             }
 
-            //token = userService.signUpUser() //TODO: After write the signUp method, we will write in this here.
+            //TODO: User roles must be controlled and rewrite roles method.
 
-            String link = "" + token;
+            token = userService.signUpUser(new User(
+                    request.getName(),
+                    request.getSurname(),
+                    request.getUsername(),
+                    request.getEmail(),
+                    request.getCompanyName(),
+                    request.getPassword(),
+                    request.getRoles()
+            ));
+
+            String link = "http://localhost:8080/api/registration/confirm?token=" + token;
             emailSender.send(request.getEmail(),buildEmail(request.getName(),link));
 
         }catch (Exception e){
