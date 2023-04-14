@@ -31,8 +31,6 @@ public class RegistrationService {
                 throw new IllegalStateException("Email not valid!");
             }
 
-            //TODO: User roles must be controlled and rewrite roles method.
-
             token = userService.signUpUser(new User(
                     request.getName(),
                     request.getSurname(),
