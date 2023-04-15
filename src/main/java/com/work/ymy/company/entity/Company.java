@@ -1,5 +1,6 @@
-package com.work.ymy.company;
+package com.work.ymy.company.entity;
 
+import com.work.ymy.company.utility.DateUtil;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Data;
@@ -12,9 +13,9 @@ public class Company {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private boolean status;
+    private boolean status = true;
 
-    private String date;
+    private String date = DateUtil.getDateFormatYYYYMMDD();
 
     private long userId;
 
