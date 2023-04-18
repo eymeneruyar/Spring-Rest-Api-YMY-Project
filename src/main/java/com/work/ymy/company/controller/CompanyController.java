@@ -9,15 +9,51 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api/company")
+@RequestMapping("/api/v1/company")
 public class CompanyController {
 
     private final CompanyService companyService;
 
     @ResponseBody
     @PostMapping("/createOrUpdateCompany")
-    ResponseEntity<?> createOrUpdateCompany(@RequestBody @Valid CompanyRequest companyRequest){
+    public ResponseEntity<?> createOrUpdateCompany(@RequestBody @Valid CompanyRequest companyRequest){
         return companyService.createOrUpdateCompany(companyRequest);
+    }
+
+    @ResponseBody
+    @GetMapping("/getListCompany")
+    public ResponseEntity<?> getListCompany(){
+        return companyService.getListCompany();
+    }
+
+    @ResponseBody
+    @PutMapping("/deleteCompany/{id}")
+    public ResponseEntity<?> deleteCompany(@PathVariable String id){
+        return companyService.deleteCompany(id);
+    }
+
+    @ResponseBody
+    @GetMapping("/getListCity")
+    public ResponseEntity<?> getListCity(){
+        return companyService.getListCity();
+    }
+
+    @ResponseBody
+    @GetMapping("/getListTownBySelectedCity/{id}")
+    public ResponseEntity<?> getListTownBySelectedCity(@PathVariable String id){
+        return companyService.getListTownBySelectedCity(id);
+    }
+
+    @ResponseBody
+    @GetMapping("/getDetailCityByCityKey/{id}")
+    public ResponseEntity<?> getDetailCityByCityKey(@PathVariable String id){
+        return companyService.getDetailCityByCityKey(id);
+    }
+
+    @ResponseBody
+    @GetMapping("/getDetailCompany/{id}")
+    public ResponseEntity<?> getDetailCompany(@PathVariable String id){
+        return companyService.getDetailCompany(id);
     }
 
 }

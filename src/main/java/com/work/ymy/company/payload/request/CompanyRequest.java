@@ -4,7 +4,8 @@ import lombok.Data;
 
 @Data
 public class CompanyRequest {
-    private long userId;
+    private Long id;
+    private Long userId;
     private String code;
     private String name;
     private String authorisedPerson;

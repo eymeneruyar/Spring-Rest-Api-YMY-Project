@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 public interface ICompanyService {
     ResponseEntity<?> createOrUpdateCompany(CompanyRequest companyRequest);
     ResponseEntity<?> getListCompany();
-    ResponseEntity<?> deleteCompany();
+    ResponseEntity<?> deleteCompany(String id);
     ResponseEntity<?> getListCity();
     ResponseEntity<?> getListTownBySelectedCity(String id);
     ResponseEntity<?> getDetailCityByCityKey(String id);

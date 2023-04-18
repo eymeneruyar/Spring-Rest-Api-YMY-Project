@@ -3,10 +3,14 @@ package com.work.ymy.company.entity;
 import com.work.ymy.company.utility.DateUtil;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 public class Company {
 
     @Id
@@ -64,5 +68,21 @@ public class Company {
 
     @Column(columnDefinition = "TEXT")
     private String address;
+
+    public Company(boolean status, String date, long userId, String code, String name, String authorisedPerson, String phone, String email, String taxOffice, String taxNumber, String city, String town, String address) {
+        this.status = status;
+        this.date = date;
+        this.userId = userId;
+        this.code = code;
+        this.name = name;
+        this.authorisedPerson = authorisedPerson;
+        this.phone = phone;
+        this.email = email;
+        this.taxOffice = taxOffice;
+        this.taxNumber = taxNumber;
+        this.city = city;
+        this.town = town;
+        this.address = address;
+    }
 
 }
