@@ -2,8 +2,12 @@ package com.work.ymy.company.service;
 
 import com.work.ymy.company.entity.Company;
 import com.work.ymy.company.payload.request.CompanyRequest;
+import com.work.ymy.company.payload.response.SuccessResponse;
 import com.work.ymy.company.repository.CompanyRepository;
+import com.work.ymy.company.utility.Constant;
+import com.work.ymy.company.utility.DateUtil;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -11,22 +15,35 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class CompanyService implements ICompanyService{
 
+    //private final Logger LOGGER = (Logger) LoggerFactory.getLogger(Company.class);
     private final CompanyRepository companyRepository;
 
     @Override
-    public ResponseEntity<?> createOrUpdateCompany(CompanyRequest companyRequest) {
+    public ResponseEntity<?> createOrUpdateCompany(CompanyRequest request) {
         Company company = new Company();
-        boolean isBeforeCreated = companyRequest.getId() != null ? true : false;
+        SuccessResponse response = new SuccessResponse();
+        boolean isBeforeCreated = request.getId() != null ? true : false;
         try {
-            if(isBeforeCreated){
-                company = new Company();
-            }else{
-                company = new Company();
+            if(isBeforeCreated){ //Update process
+                company = new Company(request.getId(),true, DateUtil.getDateFormatYYYYMMDD(),request.getUserId(), request.getCode(), request.getName(), request.getAuthorisedPerson(), request.getPhone(), request.getEmail(), request.getTaxOffice(), request.getTaxNumber(), request.getCity(), request.getTown(), request.getAddress());
+                companyRepository.saveAndFlush(company);
+                response.setMessage(Constant.UPDATE_COMPANY_SUCCESS_RESPONSE_MESSAGE);
+            }else{ //Save process
+                company = new Company(true, DateUtil.getDateFormatYYYYMMDD(),request.getUserId(), request.getCode(), request.getName(), request.getAuthorisedPerson(), request.getPhone(), request.getEmail(), request.getTaxOffice(), request.getTaxNumber(), request.getCity(), request.getTown(), request.getAddress());
+                companyRepository.save(company);
+                response.setMessage(Constant.CREATE_COMPANY_SUCCESS_RESPONSE_MESSAGE);
             }
+            response.setData(company);
+            response.setHttpStatusCode(HttpStatus.OK);
+            response.setSuccess(true);
         }catch (Exception e){
-            //TODO: Working requirement
+            //LOGGER.error(Constant.GENERAL_ERROR_MESSAGE + ": " + e.getMessage());
+            response.setData(company);
+            response.setMessage(Constant.GENERAL_ERROR_MESSAGE + ": " + e);
+            response.setHttpStatusCode(HttpStatus.INTERNAL_SERVER_ERROR);
+            response.setSuccess(false);
         }
-        return null;
+        return ResponseEntity.ok(response);
     }
 
     @Override

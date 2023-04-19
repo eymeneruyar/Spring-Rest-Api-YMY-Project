@@ -59,6 +59,7 @@ public class WebSecurityConfig {
                 .requestMatchers("/api/test/all").permitAll()
                 .requestMatchers("/api/test/user").hasAnyRole("ADMIN","USER")
                 .requestMatchers("/api/test/admin").hasRole("ADMIN")
+                .requestMatchers("/api/v1/company/**").hasAnyRole("ADMIN")
                 .anyRequest().authenticated();
 
         http.authenticationProvider(authenticationProvider());
