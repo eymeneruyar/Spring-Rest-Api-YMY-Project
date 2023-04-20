@@ -4,7 +4,9 @@ import com.work.ymy.company.entity.Company;
 import com.work.ymy.company.exception.CompanyNotFoundException;
 import com.work.ymy.company.payload.request.CompanyRequest;
 import com.work.ymy.company.payload.response.SuccessResponse;
+import com.work.ymy.company.repository.CitiesRepository;
 import com.work.ymy.company.repository.CompanyRepository;
+import com.work.ymy.company.repository.TownsRepository;
 import com.work.ymy.company.utility.Constant;
 import com.work.ymy.company.utility.DateUtil;
 import lombok.AllArgsConstructor;
@@ -18,71 +20,103 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class CompanyService implements ICompanyService{
 
+    private final TownsRepository townsRepository;
+    private final CitiesRepository citiesRepository;
     private final CompanyRepository companyRepository;
     private static final Logger LOGGER = LogManager.getLogger(CompanyService.class);
     //TODO: User id değeri micro'da uygun alınacka şekilde revize edilecek.
 
     @Override
     public ResponseEntity<?> createOrUpdateCompany(CompanyRequest request) {
-        Company company = new Company();
-        SuccessResponse response = new SuccessResponse();
+        String message;
+        Company company;
         boolean isBeforeCreated = request.getId() != null ? true : false;
         if(isBeforeCreated){ //Update process
             company = new Company(request.getId(),true, DateUtil.getDateFormatYYYYMMDD(),request.getUserId(), request.getCode(), request.getName(), request.getAuthorisedPerson(), request.getPhone(), request.getEmail(), request.getTaxOffice(), request.getTaxNumber(), request.getCity(), request.getTown(), request.getAddress());
             companyRepository.saveAndFlush(company);
-            response.setMessage(Constant.UPDATE_COMPANY_SUCCESS_RESPONSE_MESSAGE);
+            message = Constant.UPDATE_COMPANY_SUCCESS_RESPONSE_MESSAGE;
         }else{ //Save process
             company = new Company(true, DateUtil.getDateFormatYYYYMMDD(),request.getUserId(), request.getCode(), request.getName(), request.getAuthorisedPerson(), request.getPhone(), request.getEmail(), request.getTaxOffice(), request.getTaxNumber(), request.getCity(), request.getTown(), request.getAddress());
             companyRepository.save(company);
-            response.setMessage(Constant.CREATE_COMPANY_SUCCESS_RESPONSE_MESSAGE);
+            message = Constant.CREATE_COMPANY_SUCCESS_RESPONSE_MESSAGE;
         }
-        response.setData(company);
-        response.setHttpStatusCode(HttpStatus.OK);
-        response.setSuccess(true);
+        SuccessResponse response = SuccessResponse.builder()
+                .httpStatusCode(HttpStatus.OK)
+                .success(true)
+                .data(company)
+                .message(message)
+                .build();
         return ResponseEntity.ok(response);
     }
 
     @Override
     public ResponseEntity<?> getListCompany() {
-        SuccessResponse response = new SuccessResponse();
-        response.setData(companyRepository.findByStatusEqualsAndUserIdEqualsOrderByIdAsc(true,1));
-        response.setSuccess(true);
-        response.setHttpStatusCode(HttpStatus.OK);
-        response.setMessage(Constant.LIST_COMPANY_SUCCESS_RESPONSE_MESSAGE);
+        SuccessResponse response = SuccessResponse.builder()
+                .message(Constant.LIST_COMPANY_SUCCESS_RESPONSE_MESSAGE)
+                .success(true)
+                .httpStatusCode(HttpStatus.OK)
+                .data(companyRepository.findByStatusEqualsAndUserIdEqualsOrderByIdAsc(true,1))
+                .build();
         return ResponseEntity.ok(response);
     }
 
     @Override
     public ResponseEntity<?> deleteCompany(String id) throws CompanyNotFoundException {
-        SuccessResponse response = new SuccessResponse();
         long companyId = Long.parseLong(id);
-        Company company = companyRepository.findById(companyId).orElseThrow(() -> new CompanyNotFoundException(Constant.DELETE_COMPANY_ERROR_NOT_FOUND_RESPONSE_MESSAGE));
+        Company company = companyRepository.findById(companyId).orElseThrow(() -> new CompanyNotFoundException(Constant.COMPANY_NOT_FOUND_MESSAGE));
         company.setStatus(false);
         companyRepository.saveAndFlush(company);
-        response.setSuccess(true);
-        response.setHttpStatusCode(HttpStatus.OK);
-        response.setMessage(Constant.DELETE_COMPANY_SUCCESS_RESPONSE_MESSAGE);
+        SuccessResponse response = SuccessResponse.builder()
+                .message(Constant.DELETE_COMPANY_SUCCESS_RESPONSE_MESSAGE)
+                .success(true)
+                .httpStatusCode(HttpStatus.OK)
+                .build();
         return ResponseEntity.ok(response);
     }
 
     @Override
     public ResponseEntity<?> getListCity() {
-        return null;
+        SuccessResponse response = SuccessResponse.builder()
+                .message(Constant.LIST_CITY_SUCCESS_RESPONSE_MESSAGE)
+                .success(true)
+                .httpStatusCode(HttpStatus.OK)
+                .data(citiesRepository.findAll())
+                .build();
+        return ResponseEntity.ok(response);
     }
 
     @Override
     public ResponseEntity<?> getListTownBySelectedCity(String id) {
-        return null;
+        SuccessResponse response = SuccessResponse.builder()
+                .message(Constant.LIST_TOWN_SUCCESS_RESPONSE_MESSAGE)
+                .success(true)
+                .httpStatusCode(HttpStatus.OK)
+                .data(townsRepository.findByTownCityKeyOrderByIdAsc(Long.parseLong(id)))
+                .build();
+        return ResponseEntity.ok(response);
     }
 
     @Override
     public ResponseEntity<?> getDetailCityByCityKey(String id) {
-        return null;
+        SuccessResponse response = SuccessResponse.builder()
+                .message(Constant.DETAIL_CITY_SUCCESS_RESPONSE_MESSAGE)
+                .success(true)
+                .httpStatusCode(HttpStatus.OK)
+                .data(citiesRepository.findByCityKey(Long.parseLong(id)))
+                .build();
+        return ResponseEntity.ok(response);
     }
 
     @Override
-    public ResponseEntity<?> getDetailCompany(String id) {
-        return null;
+    public ResponseEntity<?> getDetailCompany(String id) throws CompanyNotFoundException {
+        Company company = companyRepository.findById(Long.parseLong(id)).orElseThrow(() -> new CompanyNotFoundException(Constant.COMPANY_NOT_FOUND_MESSAGE));
+        SuccessResponse response = SuccessResponse.builder()
+                .message(Constant.DETAIL_COMPANY_SUCCESS_RESPONSE_MESSAGE)
+                .success(true)
+                .httpStatusCode(HttpStatus.OK)
+                .data(company)
+                .build();
+        return ResponseEntity.ok(response);
     }
 
 }

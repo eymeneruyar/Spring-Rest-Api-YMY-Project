@@ -53,7 +53,7 @@ public class CompanyController {
 
     @ResponseBody
     @GetMapping("/getDetailCompany/{id}")
-    public ResponseEntity<?> getDetailCompany(@PathVariable String id){
+    public ResponseEntity<?> getDetailCompany(@PathVariable String id) throws CompanyNotFoundException {
         return companyService.getDetailCompany(id);
     }
 

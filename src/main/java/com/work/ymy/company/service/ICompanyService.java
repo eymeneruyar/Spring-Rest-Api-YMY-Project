@@ -11,5 +11,5 @@ public interface ICompanyService {
     ResponseEntity<?> getListCity();
     ResponseEntity<?> getListTownBySelectedCity(String id);
     ResponseEntity<?> getDetailCityByCityKey(String id);
-    ResponseEntity<?> getDetailCompany(String id);
+    ResponseEntity<?> getDetailCompany(String id) throws CompanyNotFoundException;
 }
