@@ -2,7 +2,6 @@ package com.work.ymy.registration.token;
 
 import com.work.ymy.user.User;
 import jakarta.persistence.*;
-import jakarta.persistence.GenerationType;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

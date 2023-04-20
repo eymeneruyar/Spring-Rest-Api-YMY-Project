@@ -1,5 +1,6 @@
 package com.work.ymy.company.controller;
 
+import com.work.ymy.company.exception.CompanyNotFoundException;
 import com.work.ymy.company.payload.request.CompanyRequest;
 import com.work.ymy.company.service.CompanyService;
 import jakarta.validation.Valid;
@@ -28,7 +29,7 @@ public class CompanyController {
 
     @ResponseBody
     @PutMapping("/deleteCompany/{id}")
-    public ResponseEntity<?> deleteCompany(@PathVariable String id){
+    public ResponseEntity<?> deleteCompany(@PathVariable String id) throws CompanyNotFoundException {
         return companyService.deleteCompany(id);
     }
 
