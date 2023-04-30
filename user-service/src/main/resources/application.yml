@@ -1,15 +1,13 @@
 server:
-  port: 8080
-  error:
-    include-message: always
-    include-binding-errors: always
+  port: 8081 #TODO: Servisler yapılandırıldıktan sonra port'lar değişecek.
 
 spring:
+  application:
+    name: user-service
   datasource:
-    driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/yarbac_new
     username: postgres
     password: 198658
+    url: jdbc:postgresql://localhost:5432/yarbac_new
   jpa:
     hibernate:
       ddl-auto: update
@@ -36,6 +34,3 @@ spring:
           connectiontimeout: 5000
           timeout: 3000
           writetimeout: 5000
-
-
-
